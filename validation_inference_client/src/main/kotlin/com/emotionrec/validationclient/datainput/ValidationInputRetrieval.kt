@@ -1,4 +1,4 @@
-package com.emotionrec.validationclient
+package com.emotionrec.validationclient.datainput
 
 import com.emotionrec.domain.models.Emotion
 import com.emotionrec.validationclient.models.EmotionPixelsData
