@@ -1,8 +1,9 @@
 package com.emotionrec.validationclient.datainput
 
 import com.emotionrec.domain.models.Emotion
+import com.emotionrec.domain.models.InferenceInput
+import com.emotionrec.domain.models.RGB
 import com.emotionrec.domain.models.toEmotion
-import com.emotionrec.validationclient.models.EmotionPixelsData
 import com.emotionrec.validationclient.models.RowData
 import java.io.BufferedReader
 import java.io.FileReader
@@ -13,15 +14,10 @@ const val HEADER_PIXELS = "pixels"
 const val CSV_FILE_NAME = "validation_inference_client/fer2013.csv"
 
 
-fun getFormattedInput(numberOfInputs: Int): List<EmotionPixelsData> {
-    val rowDataList = getPartialInputData(numberOfInputs)
-
-    val emotionPixelsDataList = rowDataList.map {
-        EmotionPixelsData(emotionRowToEmotionTransformer(it.emotion),
-                pixelRowToArrayOfFloats(it.pixels).map { it.map { it -> arrayOf(it, it, it) } })// rgb with same values
+fun getFormattedInput(numberOfInputs: Int): List<Pair<InferenceInput, Emotion>> {
+    return getPartialInputData(numberOfInputs).map {
+        Pair(pixelRowToArrayOfFloats(it.pixels), emotionRowToEmotionTransformer(it.emotion))
     }
-
-    return emotionPixelsDataList
 }
 
 //0=Angry, 1=Disgust, 2=Fear, 3=Happy, 4=Sad, 5=Surprise, 6=Neutral).
@@ -30,26 +26,21 @@ fun emotionRowToEmotionTransformer(emotionRow: String): Emotion {
 }
 
 // 48 x 48, /255
-fun pixelRowToArrayOfFloats(pixels: String): Array<Array<Float>> {
+fun pixelRowToArrayOfFloats(pixels: String): InferenceInput {
     val pixelArray = pixels.split(" ")
     check(pixelArray.size == 2304)
 
-    val floatArrayList = mutableListOf<Array<Float>>()
+    val rowRgbList = mutableListOf<List<RGB>>()
     for (i in 0 until 48) {
-        val rowFloatArray = FloatArray(48)
+        val rowRgb = mutableListOf<RGB>()
         for (j in 0 until 48) {
-            rowFloatArray[j] = pixelArray[(i * 48) + j].toFloat() / 255
+            val pixelValue = pixelArray[(i * 48) + j].toFloat() / 255
+            val rgb = RGB(arrayOf(pixelValue, pixelValue, pixelValue))// rgb with same values
+            rowRgb.add(rgb)
         }
-        floatArrayList.add(rowFloatArray.toTypedArray())
+        rowRgbList.add(rowRgb)
     }
-    return floatArrayList.toTypedArray()
-}
-
-
-fun getAllInputData(): List<RowData> {
-    return readData { _, rawRow ->
-        rawRow?.isNotEmpty() == true
-    }
+    return InferenceInput(rowRgbList)
 }
 
 fun getPartialInputData(numberOfInputs: Int): List<RowData> {
@@ -83,6 +74,7 @@ private fun readData(dataRowsPredicate: (index: Int, rawRow: String?) -> Boolean
         }
 
     }
+
     println("Data retrieved: ${inputData.size}")
     if (inputData.isNotEmpty()) {
         println("Example data - first row: ${inputData[0]}")
