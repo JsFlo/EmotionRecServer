@@ -15,3 +15,10 @@ enum class Emotion {
         val validEmotionSize = emotionValues.size - 1
     }
 }
+
+fun Int?.toEmotion(): Emotion {
+    return if (this != null && this in 0..6)
+        Emotion.emotionValues[this]
+    else
+        Emotion.VULCAN
+}

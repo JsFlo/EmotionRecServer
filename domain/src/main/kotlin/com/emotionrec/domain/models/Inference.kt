@@ -11,7 +11,7 @@ data class InferenceInput(val images: List<List<RGB>>, private val shape: Shape 
     }
 }
 
-class RGB(arrOfRGB: Array<Float>) {
+class RGB(val arrOfRGB: Array<Float>) {
     init {
         require(arrOfRGB.size == 3)
     }
