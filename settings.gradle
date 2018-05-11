@@ -1,0 +1,4 @@
+rootProject.name = 'emotion_rec_server'
+rootProject.name = 'emotion_rec_server'
+include 'domain'
+
