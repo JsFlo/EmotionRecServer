@@ -1,4 +1,4 @@
-package com.emotionrec.api.models
+package com.emotionrec.domain.models
 
 enum class ErrorRate {
     TOP_1,

@@ -1,4 +1,4 @@
-package com.emotionrec.api.models
+package com.emotionrec.domain.models
 
 data class Shape(val columns: Int, val rows: Int)
 

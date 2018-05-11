@@ -1,7 +1,7 @@
-package com.emotionrec.api.service
+package com.emotionrec.domain.service
 
-import com.emotionrec.api.models.InferenceInput
-import com.emotionrec.api.models.PredictionGroup
+import com.emotionrec.domain.models.InferenceInput
+import com.emotionrec.domain.models.PredictionGroup
 
 // gcp or custom
 interface InferenceService {

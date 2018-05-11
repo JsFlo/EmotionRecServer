@@ -1,4 +1,4 @@
-package com.emotionrec.api.models
+package com.emotionrec.domain.models
 
 class PredictionGroup(predictions: List<Prediction>) {
     val sortedPredictions = predictions.sortedByDescending { it.probability }
