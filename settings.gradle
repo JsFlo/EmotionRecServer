@@ -4,4 +4,5 @@ include 'domain'
 include 'gcp_inference_service'
 include 'validation_inference_client'
 include 'application'
+include 'api_inference_client'
 
