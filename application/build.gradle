@@ -15,7 +15,7 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'application'
-
+mainClassName = "com.emotionrec.application.MainKt"
 sourceCompatibility = 1.8
 
 repositories {

@@ -1,6 +1,7 @@
 package com.emotionrec.validationclient.datainput
 
 import com.emotionrec.domain.models.Emotion
+import com.emotionrec.domain.models.toEmotion
 import com.emotionrec.validationclient.models.EmotionPixelsData
 import com.emotionrec.validationclient.models.RowData
 import java.io.BufferedReader
@@ -9,7 +10,7 @@ import java.io.FileReader
 
 const val HEADER_EMOTION = "emotion"
 const val HEADER_PIXELS = "pixels"
-const val CSV_FILE_NAME = "fer2013.csv"
+const val CSV_FILE_NAME = "validation_inference_client/fer2013.csv"
 
 
 fun getFormattedInput(numberOfInputs: Int): List<EmotionPixelsData> {
@@ -23,14 +24,6 @@ fun getFormattedInput(numberOfInputs: Int): List<EmotionPixelsData> {
     return emotionPixelsDataList
 }
 
-
-fun Int?.toEmotion(): Emotion {
-    return if (this != null && this in 0..6)
-        Emotion.emotionValues[this]
-    else
-        Emotion.VULCAN
-}
-
 //0=Angry, 1=Disgust, 2=Fear, 3=Happy, 4=Sad, 5=Surprise, 6=Neutral).
 fun emotionRowToEmotionTransformer(emotionRow: String): Emotion {
     return emotionRow.toIntOrNull().toEmotion()
@@ -39,7 +32,7 @@ fun emotionRowToEmotionTransformer(emotionRow: String): Emotion {
 // 48 x 48, /255
 fun pixelRowToArrayOfFloats(pixels: String): Array<Array<Float>> {
     val pixelArray = pixels.split(" ")
-    // should be 2304
+    check(pixelArray.size == 2304)
 
     val floatArrayList = mutableListOf<Array<Float>>()
     for (i in 0 until 48) {
