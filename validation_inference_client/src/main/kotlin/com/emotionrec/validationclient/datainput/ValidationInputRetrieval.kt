@@ -20,6 +20,12 @@ fun getFormattedInput(numberOfInputs: Int): List<Pair<InferenceInput, Emotion>> 
     }
 }
 
+fun getPartialInputData(numberOfInputs: Int): List<RowData> {
+    return readData { index, _ ->
+        index < numberOfInputs
+    }
+}
+
 //0=Angry, 1=Disgust, 2=Fear, 3=Happy, 4=Sad, 5=Surprise, 6=Neutral).
 fun emotionRowToEmotionTransformer(emotionRow: String): Emotion {
     return emotionRow.toIntOrNull().toEmotion()
@@ -41,12 +47,6 @@ fun pixelRowToArrayOfFloats(pixels: String): InferenceInput {
         rowRgbList.add(rowRgb)
     }
     return InferenceInput(rowRgbList)
-}
-
-fun getPartialInputData(numberOfInputs: Int): List<RowData> {
-    return readData { index, _ ->
-        index < numberOfInputs
-    }
 }
 
 private fun readData(dataRowsPredicate: (index: Int, rawRow: String?) -> Boolean): List<RowData> {
