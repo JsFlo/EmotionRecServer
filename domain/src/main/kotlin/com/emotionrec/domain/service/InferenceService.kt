@@ -5,7 +5,7 @@ import com.emotionrec.domain.models.PredictionGroup
 
 // gcp or custom
 interface InferenceService {
-    fun getPrediction(inferenceInput: InferenceInput): PredictionGroup
+    fun getPrediction(inferenceInput: List<InferenceInput>): PredictionGroup
 }
 
 // validation input or api
