@@ -7,3 +7,6 @@ import com.emotionrec.domain.models.PredictionGroup
 interface InferenceService {
     fun getPrediction(inferenceInput: InferenceInput): PredictionGroup
 }
+
+// validation input or api
+abstract class InferenceServerClient(inferenceService: InferenceService)
