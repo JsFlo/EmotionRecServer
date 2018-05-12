@@ -12,33 +12,21 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class GcpInferenceService(val predictionApi: GcpPredictionApi = predictionServiceApi) : InferenceService {
-    override fun getPrediction(inferenceInputs: List<InferenceInput>, predictionResult: (Try<List<PredictionGroup>>) -> Unit) {
-        predictionApi.getPredictions(inferenceInputs.toGcpPredictionInput())
-                .enqueue(object : Callback<GcpPredictionResult> {
-                    override fun onResponse(call: Call<GcpPredictionResult>?, response: Response<GcpPredictionResult>?) {
-                        println("Successful:  ${response?.isSuccessful}")
-                        if (response?.isSuccessful == true) {
-                            val predictionGroups = response.body()?.toPredictionGroups()
-                            if (predictionGroups != null) {
-                                predictionResult(Try.just(predictionGroups))
-                            } else {
-                                predictionResult(Try.raise(Throwable("Success but body null ?")))
-                            }
-                        } else {
-                            val error = response?.errorBody()?.string()
-                            println(error)
-                            predictionResult(Try.raise(Throwable(error)))
-                        }
+class GcpInferenceService(private val predictionApi: GcpPredictionApi = predictionServiceApi) : InferenceService {
+    override fun getPrediction(inferenceInputs: List<InferenceInput>): Try<List<PredictionGroup>> {
+        val response: Response<GcpPredictionResult>? = predictionApi.getPredictions(inferenceInputs.toGcpPredictionInput()).execute()
+        return if (response?.isSuccessful == true) {
+            val predictionGroups = response.body()?.toPredictionGroups()
+            if (predictionGroups != null) {
+                Try.just(predictionGroups)
+            } else {
+                Try.raise(Throwable("Success but body null ?"))
+            }
+        } else {
+            val error = response?.errorBody()?.string()
+            println(error)
+            Try.raise(Throwable(error))
+        }
 
-
-                    }
-
-                    override fun onFailure(call: Call<GcpPredictionResult>?, t: Throwable?) {
-                        println("failure $t")
-                        predictionResult(Try.raise(t!!))
-                    }
-
-                })
     }
 }

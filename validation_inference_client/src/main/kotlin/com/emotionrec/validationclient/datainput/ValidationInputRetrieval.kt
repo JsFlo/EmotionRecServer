@@ -32,8 +32,8 @@ fun emotionRowToEmotionTransformer(emotionRow: String): Emotion {
 }
 
 // 48 x 48, /255
-fun pixelRowToArrayOfFloats(pixels: String): InferenceInput {
-    val pixelArray = pixels.split(" ")
+fun pixelRowToArrayOfFloats(pixels: String, delimeter: String = " "): InferenceInput {
+    val pixelArray = pixels.split(delimeter)
     check(pixelArray.size == 2304)
 
     val rowRgbList = mutableListOf<List<RGB>>()

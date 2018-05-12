@@ -14,19 +14,19 @@ class ValidationInputInference(inferenceService: InferenceService) : InferenceSe
         var formattedInputData = getFormattedInput(100)
         formattedInputData = formattedInputData.shuffled().take(20)
 
-        inferenceService.getPrediction(formattedInputData.toInferenceInput(), {
-            it.map {
-                it.forEachIndexed { index, predictionGroup ->
-                    println(predictionGroup)
-                    val correctEmotion = formattedInputData[index].second
-                    println("""
-                        |   Correct Emotion: $correctEmotion
-                        |   Error Rate: ${ErrorRate.getErrorRate(predictionGroup, correctEmotion)}
-                        """.trimMargin())
-                }
-            }
-                    .recover { println("Failed: $it") }
-        })
+//        inferenceService.getPrediction(formattedInputData.toInferenceInput(), {
+//            it.map {
+//                it.forEachIndexed { index, predictionGroup ->
+//                    println(predictionGroup)
+//                    val correctEmotion = formattedInputData[index].second
+//                    println("""
+//                        |   Correct Emotion: $correctEmotion
+//                        |   Error Rate: ${ErrorRate.getErrorRate(predictionGroup, correctEmotion)}
+//                        """.trimMargin())
+//                }
+//            }
+//                    .recover { println("Failed: $it") }
+//        })
     }
 
     fun List<Pair<InferenceInput, Emotion>>.toInferenceInput(): List<InferenceInput> {
