@@ -1,6 +1,5 @@
 package com.emotionrec.validationclient
 
-import arrow.core.recover
 import com.emotionrec.domain.models.Emotion
 import com.emotionrec.domain.models.ErrorRate
 import com.emotionrec.domain.models.InferenceInput
@@ -12,19 +11,19 @@ fun main(args: Array<String>) {
     var formattedInputData = getFormattedInput(100)
     formattedInputData = formattedInputData.shuffled().take(20)
 
-    val result = inferenceService.getPrediction(formattedInputData.toInferenceInput())
-    result.map {
-        it.forEachIndexed { index, predictionGroup ->
-            println(predictionGroup)
-            val correctEmotion = formattedInputData[index].second
-            println("""
+    inferenceService.getPrediction(formattedInputData.toInferenceInput())
+            .fold(
+                    { println("Failed: $it") },
+                    {
+                        it.forEachIndexed { index, predictionGroup ->
+                            println(predictionGroup)
+                            val correctEmotion = formattedInputData[index].second
+                            println("""
                         |   Correct Emotion: $correctEmotion
                         |   Error Rate: ${ErrorRate.getErrorRate(predictionGroup, correctEmotion)}
                         """.trimMargin())
-        }
-    }
-            .recover { println("Failed: $it") }
-
+                        }
+                    })
 }
 
 

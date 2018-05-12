@@ -1,6 +1,5 @@
 package com.emotionrec.api
 
-import arrow.core.getOrElse
 import com.emotionrec.api.models.PredictionResult
 import com.emotionrec.domain.models.PredictionGroup
 import com.emotionrec.gcpinference.GcpInferenceService
@@ -34,15 +33,15 @@ fun main(args: Array<String>) {
             }
             post("/prediction") {
                 val receive = call.receive<Parameters>()
-                val arrValue: String? = receive.get("arr")
+                val arrValue: String? = receive.get("image_array")
+                val delimeter: String? = receive.get("delimeter")
                 arrValue?.let {
-                    val inferenceInput = pixelRowToArrayOfFloats(it)
+                    val inferenceInput = pixelRowToArrayOfFloats(it, delimeter ?: " ")
                     val result = inferenceService.getPrediction(listOf(inferenceInput))
-                    val resultValue: Any = result.getOrElse { it }
-                    when (resultValue) {
-                        is List<*> -> call.respond((resultValue as List<PredictionGroup>).toPredictionResult())
-                        is Throwable -> call.respondText { "throw" }
-                    }
+                    result.fold(
+                            { call.respondText { "throw: $it" } },
+                            { call.respond(it.toPredictionResult()) }
+                    )
                 }
 
             }
