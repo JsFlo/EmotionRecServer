@@ -1,7 +1,6 @@
 rootProject.name = 'emotion_rec_server'
-rootProject.name = 'emotion_rec_server'
 include 'domain'
-include 'gcp_inference_service'
-include 'validation_inference_client'
+include 'gcp_inference'
+include 'validation_csv'
 include 'api_ktor'
 

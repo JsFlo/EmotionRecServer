@@ -11,7 +11,7 @@ import java.io.FileReader
 
 const val HEADER_EMOTION = "emotion"
 const val HEADER_PIXELS = "pixels"
-const val CSV_FILE_NAME = "validation_inference_client/fer2013.csv"
+const val CSV_FILE_NAME = "validation_csv/fer2013.csv"
 
 
 fun getFormattedInput(numberOfInputs: Int): List<Pair<InferenceInput, Emotion>> {

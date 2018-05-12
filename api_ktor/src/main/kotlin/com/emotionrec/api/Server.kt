@@ -1,9 +1,10 @@
 package com.emotionrec.api
 
+import arrow.core.Either
 import com.emotionrec.api.models.PredictionResult
 import com.emotionrec.domain.models.PredictionGroup
+import com.emotionrec.domain.service.InferenceService
 import com.emotionrec.gcpinference.GcpInferenceService
-import com.emotionrec.validationclient.datainput.pixelRowToArrayOfFloats
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
@@ -33,24 +34,12 @@ fun main(args: Array<String>) {
             }
             post("/prediction") {
                 val receive = call.receive<Parameters>()
-                val arrValue: String? = receive.get("image_array")
-                val delimeter: String? = receive.get("delimeter")
-                arrValue?.let {
-                    val inferenceInput = pixelRowToArrayOfFloats(it, delimeter ?: " ")
-                    val result = inferenceService.getPrediction(listOf(inferenceInput))
-                    result.fold(
-                            { call.respondText { "throw: $it" } },
-                            { call.respond(it.toPredictionResult()) }
-                    )
+                val result = predictionInput(receive["image_array"], receive["delimeter"], inferenceService)
+                when (result) {
+                    is Either.Right -> call.respond(result.b)
+                    is Either.Left -> call.respondText { "throw: ${result.a}" }
                 }
-
             }
         }
     }.start(true)
 }
-
-
-fun List<PredictionGroup>.toPredictionResult(): PredictionResult {
-    return PredictionResult(this[0].sortedPredictions, this[0].sortedPredictions[0])
-}
-
