@@ -37,7 +37,7 @@ fun main(args: Array<String>) {
                 val result = predictionInput(receive["image_array"], receive["delimeter"] ?: " ", inferenceService)
                 when (result) {
                     is Either.Right -> call.respond(result.b)
-                    is Either.Left -> call.respondText { "throw: ${result.a}" }
+                    is Either.Left -> call.respond(result.a)
                 }
             }
         }

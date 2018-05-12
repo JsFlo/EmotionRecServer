@@ -41,7 +41,7 @@ fun pixelRowToArrayOfFloats(pixels: String, delimeter: String = " "): InferenceI
         val rowRgb = mutableListOf<RGB>()
         for (j in 0 until 48) {
             val pixelValue = pixelArray[(i * 48) + j].toFloat() / 255
-            val rgb = RGB(arrayOf(pixelValue, pixelValue, pixelValue))// rgb with same values
+            val rgb = RGB(pixelValue, pixelValue, pixelValue)// rgb with same values
             rowRgb.add(rgb)
         }
         rowRgbList.add(rowRgb)

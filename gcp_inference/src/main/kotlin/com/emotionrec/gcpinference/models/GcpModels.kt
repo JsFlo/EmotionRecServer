@@ -22,7 +22,7 @@ fun List<InferenceInput>.toGcpPredictionInput(): GcpPredictionInput {
 class GcpPredictionInstance(val images: List<List<Array<Float>>>) {
     companion object {
         fun create(inferenceInput: InferenceInput): GcpPredictionInstance {
-            return GcpPredictionInstance(inferenceInput.images.map { it.map { it.arrOfRGB } })
+            return GcpPredictionInstance(inferenceInput.images.map { it.map { arrayOf(it.r, it.g, it.b) } })
         }
     }
 }

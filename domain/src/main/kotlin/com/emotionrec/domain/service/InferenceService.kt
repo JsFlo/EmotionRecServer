@@ -6,6 +6,5 @@ import com.emotionrec.domain.models.PredictionGroup
 
 // gcp or custom
 interface InferenceService {
-    // TODO: change to sync
     fun getPrediction(inferenceInputs: List<InferenceInput>): Try<List<PredictionGroup>>
 }
