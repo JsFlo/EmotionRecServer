@@ -15,15 +15,15 @@ sealed class PredictionError {
 
 
 fun predictionInput(imageArray: String?, delimeter: String = " ", inferenceService: InferenceService)
-        : Either<PredictionError, List<PredictionGroup>> {
+        : Either<PredictionError, PredictionResult> {
     return if (imageArray.isNullOrEmpty()) {
         Either.left(PredictionError.MissingInput)
     } else {
         val inferenceInput = getInferenceInput(imageArray!!, delimeter)
-        inferenceInput.map {
-            getPrediction(inferenceService, listOf(it))
+        when (inferenceInput) {
+            is Either.Left -> Either.left(inferenceInput.a)
+            is Either.Right -> getPrediction(inferenceService, inferenceInput.b).map { it.toPredictionResult() }
         }
-
     }
 }
 

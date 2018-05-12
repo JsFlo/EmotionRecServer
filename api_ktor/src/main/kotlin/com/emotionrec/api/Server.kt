@@ -34,7 +34,7 @@ fun main(args: Array<String>) {
             }
             post("/prediction") {
                 val receive = call.receive<Parameters>()
-                val result = predictionInput(receive["image_array"], receive["delimeter"], inferenceService)
+                val result = predictionInput(receive["image_array"], receive["delimeter"] ?: " ", inferenceService)
                 when (result) {
                     is Either.Right -> call.respond(result.b)
                     is Either.Left -> call.respondText { "throw: ${result.a}" }
