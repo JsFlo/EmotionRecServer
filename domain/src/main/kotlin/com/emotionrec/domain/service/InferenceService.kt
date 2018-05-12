@@ -9,6 +9,3 @@ interface InferenceService {
     // TODO: change to sync
     fun getPrediction(inferenceInputs: List<InferenceInput>): Try<List<PredictionGroup>>
 }
-
-// validation input or api
-abstract class InferenceServerClient(inferenceService: InferenceService)
