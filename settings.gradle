@@ -3,5 +3,5 @@ rootProject.name = 'emotion_rec_server'
 include 'domain'
 include 'gcp_inference_service'
 include 'validation_inference_client'
-include 'api_inference_client'
+include 'api_ktor'
 
