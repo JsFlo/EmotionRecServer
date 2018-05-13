@@ -3,9 +3,9 @@ package com.emotionrec.api
 import com.google.gson.GsonBuilder
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.testing.*
-import io.restassured.RestAssured.*
-import io.restassured.response.ResponseBody
+import io.ktor.server.testing.TestApplicationEngine
+import io.ktor.server.testing.createTestEnvironment
+import io.ktor.server.testing.handleRequest
 import junit.framework.Assert.assertEquals
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe

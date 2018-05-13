@@ -9,10 +9,6 @@ buildscript {
     }
 }
 
-plugins {
-    id 'java'
-}
-
 group 'emotionrec'
 version '1.0-SNAPSHOT'
 
@@ -25,16 +21,6 @@ allprojects {
         mavenCentral()
         jcenter()
     }
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
-}
-
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
 compileKotlin {
