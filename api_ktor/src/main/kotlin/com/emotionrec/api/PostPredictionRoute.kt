@@ -13,6 +13,12 @@ import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.routing.post
 
+sealed class PredictionError(val message: String) {
+    class MissingInput(message: String) : PredictionError(message)
+    class InvalidInput(message: String) : PredictionError(message)
+    class TodoErr : PredictionError("Err")
+}
+
 data class PostPredictionData(val image_array: String, val delimeter: String?)
 
 fun Routing.postPrediction() {
@@ -26,14 +32,7 @@ fun Routing.postPrediction() {
     }
 }
 
-sealed class PredictionError(val message: String) {
-    class MissingInput(message: String) : PredictionError(message)
-    class InvalidInput(message: String) : PredictionError(message)
-    class TodoErr : PredictionError("Err")
-}
-
-
-fun predictionInput(imageArray: String?, delimeter: String = " ", inferenceService: InferenceService)
+private fun predictionInput(imageArray: String?, delimeter: String = " ", inferenceService: InferenceService)
         : Either<PredictionError, PredictionResponse> {
     return if (imageArray.isNullOrEmpty()) {
         Either.left(PredictionError.MissingInput("Image array empty"))
@@ -46,7 +45,7 @@ fun predictionInput(imageArray: String?, delimeter: String = " ", inferenceServi
     }
 }
 
-fun getInferenceInput(imageArrayString: String, delimeter: String): Either<PredictionError, InferenceInput> {
+private fun getInferenceInput(imageArrayString: String, delimeter: String): Either<PredictionError, InferenceInput> {
     val pixelFloatArray = imageArrayString.split(delimeter)
             .map { it.toFloatOrNull() }
             .filter { it != null } as List<Float>
@@ -69,12 +68,12 @@ fun getInferenceInput(imageArrayString: String, delimeter: String): Either<Predi
 
 }
 
-fun getPrediction(inferenceService: InferenceService, inferenceInput: InferenceInput): Either<PredictionError, List<PredictionGroup>> {
+private fun getPrediction(inferenceService: InferenceService, inferenceInput: InferenceInput): Either<PredictionError, List<PredictionGroup>> {
     return inferenceService.getPrediction(listOf(inferenceInput))
             .fold({ Either.left(PredictionError.TodoErr()) },
                     { Either.right(it) })
 }
 
-fun List<PredictionGroup>.toPredictionResult(): PredictionResponse {
+private fun List<PredictionGroup>.toPredictionResult(): PredictionResponse {
     return PredictionResponse(this[0].sortedPredictions, this[0].sortedPredictions[0])
 }
