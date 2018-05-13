@@ -56,6 +56,8 @@ dependencies {
     testRuntime 'org.jetbrains.spek:spek-junit-platform-engine:1.1.5'
     testCompile 'org.junit.platform:junit-platform-runner:1.0.0'
     testCompile "org.junit.platform:junit-platform-launcher:1.0.0-M4"
+    testCompile 'org.amshove.kluent:kluent:1.35'
+    testCompile 'io.rest-assured:rest-assured:3.0.7'
 }
 
 kotlin {
