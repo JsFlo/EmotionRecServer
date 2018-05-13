@@ -7,7 +7,7 @@ import okhttp3.*
 import java.io.FileInputStream
 import java.util.*
 
-private const val GOOGLE_CRED_FILE = "gcp_inference/happy_rec_cred.json"
+private const val GOOGLE_CRED_FILE = "happy_rec_cred.json"
 
 val googleCredentialFromFile: GoogleCredential by lazy {
     GoogleCredential.fromStream(FileInputStream(GOOGLE_CRED_FILE),

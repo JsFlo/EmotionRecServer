@@ -1,12 +1,30 @@
 package com.emotionrec.api
 
 import arrow.core.Either
-import com.emotionrec.api.models.PredictionResult
+import com.emotionrec.api.responses.PredictionResponse
 import com.emotionrec.domain.models.InferenceInput
 import com.emotionrec.domain.models.PredictionGroup
 import com.emotionrec.domain.models.RGB
 import com.emotionrec.domain.service.InferenceService
+import com.emotionrec.gcpinference.GcpInferenceService
+import io.ktor.application.call
+import io.ktor.request.receive
+import io.ktor.response.respond
+import io.ktor.routing.Routing
+import io.ktor.routing.post
 
+data class PostPredictionData(val image_array: String, val delimeter: String?)
+
+fun Routing.postPrediction() {
+    post("/prediction") {
+        val postData = call.receive<PostPredictionData>()
+        val result = predictionInput(postData.image_array, postData.delimeter ?: " ", GcpInferenceService())
+        when (result) {
+            is Either.Right -> call.respond(result.b)
+            is Either.Left -> call.respond(result.a)
+        }
+    }
+}
 
 sealed class PredictionError(val message: String) {
     class MissingInput(message: String) : PredictionError(message)
@@ -16,7 +34,7 @@ sealed class PredictionError(val message: String) {
 
 
 fun predictionInput(imageArray: String?, delimeter: String = " ", inferenceService: InferenceService)
-        : Either<PredictionError, PredictionResult> {
+        : Either<PredictionError, PredictionResponse> {
     return if (imageArray.isNullOrEmpty()) {
         Either.left(PredictionError.MissingInput("Image array empty"))
     } else {
@@ -57,6 +75,6 @@ fun getPrediction(inferenceService: InferenceService, inferenceInput: InferenceI
                     { Either.right(it) })
 }
 
-fun List<PredictionGroup>.toPredictionResult(): PredictionResult {
-    return PredictionResult(this[0].sortedPredictions, this[0].sortedPredictions[0])
+fun List<PredictionGroup>.toPredictionResult(): PredictionResponse {
+    return PredictionResponse(this[0].sortedPredictions, this[0].sortedPredictions[0])
 }
