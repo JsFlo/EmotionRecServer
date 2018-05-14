@@ -5,71 +5,59 @@ import com.emotionrec.tfinference.exts.runFirstTensor
 import org.tensorflow.SavedModelBundle
 import org.tensorflow.Tensor
 
+typealias OutsideArray<T> = Array<T>
+typealias Column<T> = Array<T>
+typealias Row<T> = Array<T>
+typealias RGB<T> = Array<T>
+
+fun Tensor<*>.getFloatArrayOutput(): Array<out FloatArray> {
+    return JavaUtils.getFloatArrayOutput(this, 1, 7)
+}
+
+fun ValidationInputRetrieval.getInput(inputRet: ValidationInputRetrieval, numberOfInputs: Int): OutsideArray<Column<Row<RGB<Float>>>> {
+    val (inferenceInput, correctEmotion) = inputRet.getFormattedInput(1)[0]
+
+    // [1, 48, 48, 3]
+    val input: OutsideArray<Column<Row<RGB<Float>>>> =
+            arrayOf(
+                    inferenceInput.images.map {
+                        // column 48
+                        it.map {
+                            // row 48
+                            arrayOf(it.r, it.b, it.g)//rgb 3
+                        }.toTypedArray()
+                    }.toTypedArray()
+            )
+}
 
 fun main(args: Array<String>) {
     val load = SavedModelBundle.load("./1", "serve")
 
-    val inputRet  = ValidationInputRetrieval()
-    val result = inputRet.getFormattedInput(1)
-    val infrenceInput = result[0].first
-    val input = infrenceInput.images.map { it.map { arrayOf(it.r, it.b, it.g) } }
-    val betterInput: Array<Array<Array<Float>>> = input.map { it.toTypedArray() }.toTypedArray()
-//        FloatBuffer.wrap(inpu)
-//        val tensorInput = Tensor.create(arrayOf<Long>(48, 48, 3), )
-    val tensorInput = Tensor.create(arrayOf(betterInput))
+    val inputRet = ValidationInputRetrieval()
+
+    val (inferenceInput, correctEmotion) = inputRet.getFormattedInput(1)[0]
+
+    // [1, 48, 48, 3]
+    val input: OutsideArray<Column<Row<RGB<Float>>>> =
+            arrayOf(
+                    inferenceInput.images.map {
+                        // column 48
+                        it.map {
+                            // row 48
+                            arrayOf(it.r, it.b, it.g)//rgb 3
+                        }.toTypedArray()
+                    }.toTypedArray()
+            )
+
+    val tensorInput = Tensor.create(input)
     load.session().runner()
             .feed("input_2", tensorInput)
-            .fetch("sequential_1/dense_4/Softmax")
+//            .fetch("sequential_1/dense_4/Softmax")
+            .fetch("sequential_1/dense_4/BiasAdd")
             .runFirstTensor {
-                println("Hi")
+                println("Output Shape: ${it.shape().joinToString()}")
+                val result: Array<out FloatArray> = it.getFloatArrayOutput()
+                val arrPredictions = result[0]
+                println("Result: ${arrPredictions.joinToString()}")
             }
-//    load.graph().use { graph ->
-//        //        graph.operations().forEach { println("Name: ${it.name()}, ${it.type()} ") }
-//        // input "input_2"
-//        // sequential_1/dense_4/Softmax
-//        val result = getFormattedInput(1)
-//        val infrenceInput = result[0].first
-//        val input = infrenceInput.images.map { it.map { arrayOf(it.r, it.b, it.g) } }
-//        val betterInput: Array<Array<Array<Float>>> = input.map { it.toTypedArray() }.toTypedArray()
-////        FloatBuffer.wrap(inpu)
-////        val tensorInput = Tensor.create(arrayOf<Long>(48, 48, 3), )
-//        val tensorInput = Tensor.create(betterInput)
-//        Session(graph).use { sess ->
-//            sess.runner()
-//                    .feed("input_2", tensorInput)
-//                    .fetch("sequential_1/dense_4/Softmax")
-//                    .runFirstTensor {
-//                        println("Hi")
-//                    }
-////                    .feed("input_2", tensorInput)
-////                    .fetch("sequential_1/dense_4/Softmax")
-////                    .run()[0]
-//
-////            val outputArr = FloatArray(7).toTypedArray()
-////            sessResult.copyTo(outputArr)
-////            println("Oh shi: $outputArr")
-//        }
-//    }
-//    Graph().use { graph ->
-//
-//        // Creates a graph for y = a (placeholder) + b (placeholder)
-//        val a = graph.addPlaceholder("a", DataType.FLOAT)
-//        val b = graph.addPlaceholder("b", DataType.FLOAT)
-//        val y = graph.Operation("y", OperationType.ADD, a, b)
-//
-//        Session(graph).use { sess ->
-//
-//            val ta = Tensor.create(10f)
-//            val tb = Tensor.create(10f)
-//            sess.runner()
-//                    .feed(a, ta)
-//                    .feed(b, tb)
-//                    .fetch(y)
-//                    .runFirstTensor {
-//                        println("${ta.floatValue()} + ${tb.floatValue()} = ${it.floatValue()}")
-//                    }
-//            ta.close()
-//            tb.close()
-//        }
-//    }
 }
