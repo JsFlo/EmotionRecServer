@@ -12,6 +12,9 @@ import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.routing.post
+import mu.KotlinLogging
+
+private val logger = KotlinLogging.logger { }
 
 sealed class PredictionError(val message: String) {
     class MissingInput(message: String) : PredictionError(message)
@@ -23,6 +26,7 @@ data class PostPredictionData(val image_array: String, val delimeter: String?)
 
 fun Routing.postPrediction() {
     post("/prediction") {
+        logger.debug { "/prediction called" }
         val postData = call.receive<PostPredictionData>()
         val result = predictionInput(postData.image_array, postData.delimeter ?: " ", GcpInferenceService())
         when (result) {

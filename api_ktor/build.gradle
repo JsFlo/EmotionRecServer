@@ -44,6 +44,7 @@ dependencies {
     compile "io.ktor:ktor-server-netty:$ktor_version"
     compile "io.ktor:ktor-gson:$ktor_version"
 
+    compile 'io.github.microutils:kotlin-logging:1.5.4'
     compile "ch.qos.logback:logback-classic:1.2.1"
 
     // domain and inference service
