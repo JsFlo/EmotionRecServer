@@ -1,17 +1,16 @@
 package com.emotionrec.tfinference
 
-import com.emotionrec.tfinference.exts.Operation
-import com.emotionrec.tfinference.exts.OperationType
-import com.emotionrec.tfinference.exts.addPlaceholder
+import com.emotionrec.domain.utils.ValidationInputRetrieval
 import com.emotionrec.tfinference.exts.runFirstTensor
-import org.tensorflow.*
-import java.nio.FloatBuffer
+import org.tensorflow.SavedModelBundle
+import org.tensorflow.Tensor
 
 
 fun main(args: Array<String>) {
     val load = SavedModelBundle.load("./1", "serve")
 
-    val result = getFormattedInput(1)
+    val inputRet  = ValidationInputRetrieval()
+    val result = inputRet.getFormattedInput(1)
     val infrenceInput = result[0].first
     val input = infrenceInput.images.map { it.map { arrayOf(it.r, it.b, it.g) } }
     val betterInput: Array<Array<Array<Float>>> = input.map { it.toTypedArray() }.toTypedArray()
