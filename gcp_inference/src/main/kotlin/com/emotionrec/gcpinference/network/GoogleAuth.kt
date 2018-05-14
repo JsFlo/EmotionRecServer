@@ -10,7 +10,7 @@ import java.util.*
 private const val GOOGLE_CRED_FILE = "happy_rec_cred.json"
 
 val googleCredentialFromFile: GoogleCredential by lazy {
-    GoogleCredential.fromStream(FileInputStream(GOOGLE_CRED_FILE),
+    GoogleCredential.fromStream(GoogleCredentialAuth::class.java.classLoader.getResourceAsStream(GOOGLE_CRED_FILE),
             GoogleNetHttpTransport.newTrustedTransport()
             , JacksonFactory.getDefaultInstance())
             .createScoped(Collections.singleton("https://www.googleapis.com/auth/cloud-platform"))
