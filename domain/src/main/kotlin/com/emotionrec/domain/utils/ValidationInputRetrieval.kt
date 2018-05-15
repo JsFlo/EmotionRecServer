@@ -31,6 +31,18 @@ data class RowData(val emotion: String, val pixels: String)
 
 class ValidationInputRetrieval(private val bufferedReader: BufferedReader = createResourceBufferedReader()) {
 
+    fun getAllRowInput(numberOfInputs: Int): Array<Float> {
+        return getPartialInputData(numberOfInputs).map {
+            pixelRowToArrayOfFloats2(it.pixels)
+        }[0]
+    }
+
+    private fun pixelRowToArrayOfFloats2(pixels: String): Array<Float> {
+        val pixelArray = pixels.split(" ")
+        check(pixelArray.size == 2304)
+        return pixelArray.map { it.toFloat()/255 }.toTypedArray()
+    }
+
     fun getFormattedInput(numberOfInputs: Int): List<Pair<InferenceInput, Emotion>> {
         return getPartialInputData(numberOfInputs).map {
             Pair(pixelRowToArrayOfFloats(it.pixels), emotionRowToEmotionTransformer(it.emotion))

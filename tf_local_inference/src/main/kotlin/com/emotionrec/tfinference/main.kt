@@ -4,11 +4,9 @@ import com.emotionrec.domain.utils.ValidationInputRetrieval
 import com.emotionrec.domain.utils.printInput
 import com.emotionrec.tfinference.exts.runFirstTensor
 import org.tensorflow.Graph
-import org.tensorflow.SavedModelBundle
 import org.tensorflow.Session
 import org.tensorflow.Tensor
 import java.io.IOException
-import java.nio.FloatBuffer
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -37,6 +35,7 @@ fun ValidationInputRetrieval.getInput(numberOfInputs: Int): OutsideArray<Column<
 
             }.toTypedArray()
     printInput(input[0])
+
     return input
 }
 
@@ -98,19 +97,26 @@ fun ValidationInputRetrieval.getInput(numberOfInputs: Int): OutsideArray<Column<
 
 fun main(args: Array<String>) {
     val inputRet = ValidationInputRetrieval()
-    val numberOfInputs = 20
-    val floatBuffer: FloatBuffer = FloatBuffer.wrap(inputRet.getInput(numberOfInputs))
-    val tensorInput = Tensor.create(arrayOf<Long>(1, 48, 48, 3),
-            inputRet.getInput(numberOfInputs))
+    val numberOfInputs = 1
+
+//    val floatBuffer: FloatBuffer = FloatBuffer.wrap(inputRet.getAllRowInput(1).toFloatArray())
+//    val tensorInput = Tensor.create(arrayOf<Long>(1, 48, 48, 3).toLongArray(),
+//            inputRet.getInput(1))
+    val tensorInput = Tensor.create(inputRet.getInput(numberOfInputs))
+    println("tensor input: " + tensorInput.shape().joinToString())
 
     val graphDef = readAllBytesOrExit(Paths.get("fifPbModel", "frozen_graph.pb"))
     val graph = Graph()
+//    println(graph.operations().asSequence().joinToString())
     graph.importGraphDef(graphDef)
-    val session = Session(graph)
-    session.runner()
+    graph.operations().forEach { println(it.name()) }
+    println("hiIIIIIIIIII: "+graph.operations().hasNext())
+//    graph.operations().asSequence().map { println(it.name()) }
+//    val session = Session(graph)
+    Session(graph).runner()
             .feed("input_2", tensorInput)
-            .fetch("sequential_1/dense_4/Softmax")
-//            .fetch("sequential_1/dense_4/BiasAdd")
+//            .fetch("sequential_1/dense_4/Softmax")
+            .fetch("sequential_1/dense_4/BiasAdd")
             .runFirstTensor {
                 println("Output Shape: ${it.shape().joinToString()}")
                 val result: Array<out FloatArray> = it.getFloatArrayOutput(numberOfInputs)

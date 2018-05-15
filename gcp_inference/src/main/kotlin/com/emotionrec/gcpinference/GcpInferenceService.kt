@@ -8,8 +8,6 @@ import com.emotionrec.gcpinference.models.GcpPredictionResult
 import com.emotionrec.gcpinference.models.toGcpPredictionInput
 import com.emotionrec.gcpinference.network.GcpPredictionApi
 import com.emotionrec.gcpinference.network.predictionServiceApi
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 
 class GcpInferenceService(private val predictionApi: GcpPredictionApi = predictionServiceApi) : InferenceService {
