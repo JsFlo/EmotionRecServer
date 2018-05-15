@@ -11,4 +11,4 @@ data class InferenceInput(val images: List<List<RGB>>, private val shape: Shape 
     }
 }
 
-class RGB(val r: Float,val g: Float,val b: Float)
+class RGB(val r: Float, val g: Float, val b: Float)

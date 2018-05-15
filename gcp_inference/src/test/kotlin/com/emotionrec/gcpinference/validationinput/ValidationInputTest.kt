@@ -14,8 +14,8 @@ class ValidationInputTest {
     fun getPrediction_shuffled20() {
         val inferenceService = GcpInferenceService()
         val validationInputRetrieval = ValidationInputRetrieval()
-        var formattedInputData = validationInputRetrieval.getFormattedInput(1)
-        formattedInputData = formattedInputData.shuffled().take(1)
+        var formattedInputData = validationInputRetrieval.getFormattedInput(20)
+//        formattedInputData = formattedInputData.shuffled().take(1)
         printInput(formattedInputData.toInferenceInput()[0].images)
         inferenceService.getPrediction(formattedInputData.toInferenceInput())
                 .fold(

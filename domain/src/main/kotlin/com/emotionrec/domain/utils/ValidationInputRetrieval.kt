@@ -8,11 +8,23 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 fun printInput(image: List<List<RGB>>) {
-    image.forEach { it.forEach { println(it.r) } }
+    image.forEach {
+        print("|")
+        it.forEach {
+            print(" [%.3f] ".format(it.r))
+        }
+        println("|")
+    }
 }
 
 fun printInput(image: Array<Array<Array<Float>>>) {
-    image.forEach { it.forEach { println(it[0]) } }
+    image.forEach {
+        print("|")
+        it.forEach {
+            print(" [%.3f] ".format(it[0]))
+        }
+        println("|")
+    }
 }
 
 data class RowData(val emotion: String, val pixels: String)
