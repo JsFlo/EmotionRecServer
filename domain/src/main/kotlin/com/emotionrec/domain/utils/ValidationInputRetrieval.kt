@@ -7,6 +7,14 @@ import com.emotionrec.domain.models.toEmotion
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
+fun printInput(image: List<List<RGB>>) {
+    image.forEach { it.forEach { println(it.r) } }
+}
+
+fun printInput(image: Array<Array<Array<Float>>>) {
+    image.forEach { it.forEach { println(it[0]) } }
+}
+
 data class RowData(val emotion: String, val pixels: String)
 
 class ValidationInputRetrieval(private val bufferedReader: BufferedReader = createResourceBufferedReader()) {
