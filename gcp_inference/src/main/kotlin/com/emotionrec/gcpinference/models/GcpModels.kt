@@ -1,9 +1,6 @@
 package com.emotionrec.gcpinference.models
 
-import com.emotionrec.domain.models.InferenceInput
-import com.emotionrec.domain.models.Prediction
-import com.emotionrec.domain.models.PredictionGroup
-import com.emotionrec.domain.models.toEmotion
+import com.emotionrec.domain.models.*
 
 // INPUT
 class GcpPredictionInput(val instances: Array<GcpPredictionInstance>) {
@@ -31,29 +28,11 @@ fun InferenceInput.toGcpPredictionInstance(): GcpPredictionInstance {
     return GcpPredictionInstance.create(this)
 }
 
-// OUTPUT
+// RESULT
 class GcpPredictionResult(val predictions: Array<GcpPredictionScores>) {
     fun toPredictionGroups(): List<PredictionGroup> {
-        return predictions.map { it.toPredictionGroup() }
+        return predictions.map { it.scores.toPredictionGroup(true) }
     }
 }
 
-class GcpPredictionScores(val scores: Array<Float>) {
-
-    fun toPredictionGroup(): PredictionGroup {
-        return PredictionGroup(softmax(scores)
-                .mapIndexed { index, prob -> Pair(index, prob) }
-                .map { it.toPrediction() })
-
-    }
-
-    private fun softmax(scores: Array<Float>): List<Double> {
-        val expScores = scores.map { Math.exp(it.toDouble()) }
-        val sum = expScores.sum()
-        return expScores.map { it / sum }
-    }
-}
-
-private fun Pair<Int, Double>.toPrediction(): Prediction {
-    return Prediction(second, first.toEmotion())
-}
+data class GcpPredictionScores(val scores: Array<Float>)

@@ -9,14 +9,14 @@ import com.emotionrec.gcpinference.GcpInferenceService
 import org.junit.Assert
 import org.junit.Test
 
-class ValidationInputTest {
+class GcpValidationInputTest {
     @Test
     fun getPrediction_shuffled20() {
         val inferenceService = GcpInferenceService()
         val validationInputRetrieval = ValidationInputRetrieval()
         var formattedInputData = validationInputRetrieval.getFormattedInput(20)
 //        formattedInputData = formattedInputData.shuffled().take(1)
-        printInput(formattedInputData.toInferenceInput()[0].images)
+//        printInput(formattedInputData.toInferenceInput()[0].images)
         inferenceService.getPrediction(formattedInputData.toInferenceInput())
                 .fold(
                         {

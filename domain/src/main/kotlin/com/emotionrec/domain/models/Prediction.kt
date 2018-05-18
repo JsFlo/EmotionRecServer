@@ -24,7 +24,7 @@ class PredictionGroup(predictions: List<Prediction>) {
 
 }
 
-data class Prediction(val probability: Probability, val emotion: Emotion) {
+data class Prediction(val probability: Float, val emotion: Emotion) {
     companion object {
         private val decimalFormat = DecimalFormat("##")
     }
@@ -34,4 +34,23 @@ data class Prediction(val probability: Probability, val emotion: Emotion) {
     }
 }
 
-typealias Probability = Double
+fun Array<Float>.toPredictionGroup(softmax: Boolean = true): PredictionGroup {
+    val values = if (softmax) {
+        this.softmax()
+    } else {
+        this
+    }
+
+    return PredictionGroup(values.toListPrediction())
+}
+
+private fun Array<Float>.softmax(): Array<Float> {
+    val expScores = this.map { Math.exp(it.toDouble()).toFloat() }
+    val sum = expScores.sum()
+    return expScores.map { it / sum }.toTypedArray()
+}
+
+private fun Array<Float>.toListPrediction(): List<Prediction> {
+    return this.mapIndexed { index, prob -> Pair(index, prob) }
+            .map { Prediction(it.second, it.first.toEmotion()) }
+}
