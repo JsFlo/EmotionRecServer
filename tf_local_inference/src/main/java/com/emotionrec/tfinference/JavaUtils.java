@@ -1,50 +1,44 @@
 package com.emotionrec.tfinference;
 
-import kotlin.jvm.JvmStatic;
 import org.jetbrains.annotations.NotNull;
-import org.tensorflow.Graph;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 
-import java.util.Arrays;
-
 public class JavaUtils {
 
-    @NotNull @JvmStatic
-    public static float[][] getFloatArrayOutput(Tensor tensor, int dim1, int dim2) {
+    @NotNull
+    public static float[][] runInference(Session session, Float[][][][] input) {
+        Tensor inputTensor = getInputTensor(input);
+        Tensor resultTensor = session.runner()
+                .feed("input_2", inputTensor)
+                .fetch("sequential_1/dense_4/Softmax")
+                .run().get(0);
+
+        float[][] result = getFloatArrayOutput(resultTensor, input.length, 7);
+        inputTensor.close();
+        resultTensor.close();
+        return result;
+
+    }
+
+    private static Tensor getInputTensor(Float[][][][] input) {
+        float[][][][] realInputs = new float[input.length][48][48][3];
+        for (int i = 0; i < input.length; i++) {
+            for (int j = 0; j < 48; j++) {
+                for (int k = 0; k < 48; k++) {
+                    for (int l = 0; l < 3; l++) {
+                        realInputs[i][j][k][l] = input[i][j][k][l];
+                    }
+                }
+            }
+        }
+        return Tensor.create(realInputs);
+    }
+
+    @NotNull
+    private static float[][] getFloatArrayOutput(Tensor tensor, int dim1, int dim2) {
         float[][] outputArr = new float[dim1][dim2];
         tensor.copyTo(outputArr);
-        System.out.println("hi");
-        for (int i = 0; i < dim1; i++) {
-            for (int j = 0; j < dim2; j++) {
-                System.out.println("" + outputArr[i][j]);
-            }
-        }
         return outputArr;
-    }
-
-    @NotNull @JvmStatic
-    public static String getSomething() {
-        return "something";
-    }
-
-    public static float[] executeInceptionGraph(byte[] graphDef, Tensor<Float> image) {
-        try (Graph g = new Graph()) {
-            g.importGraphDef(graphDef);
-            try (Session s = new Session(g);
-                 Tensor<Float> result =
-                         s.runner().feed("input", image)
-                                 .fetch("output").run().get(0).expect(Float.class)) {
-                final long[] rshape = result.shape();
-                if (result.numDimensions() != 2 || rshape[0] != 1) {
-                    throw new RuntimeException(
-                            String.format(
-                                    "Expected model to produce a [1 N] shaped tensor where N is the number of labels, instead it produced one with shape %s",
-                                    Arrays.toString(rshape)));
-                }
-                int nlabels = (int) rshape[1];
-                return result.copyTo(new float[1][nlabels])[0];
-            }
-        }
     }
 }
