@@ -4,19 +4,17 @@ import com.emotionrec.domain.models.Emotion
 import com.emotionrec.domain.models.ErrorRate
 import com.emotionrec.domain.models.InferenceInput
 import com.emotionrec.domain.utils.ValidationInputRetrieval
-import com.emotionrec.domain.utils.printInput
 import com.emotionrec.gcpinference.GcpInferenceService
 import org.junit.Assert
 import org.junit.Test
 
 class GcpValidationInputTest {
     @Test
-    fun getPrediction_shuffled20() {
+    fun getPrediction_20() {
         val inferenceService = GcpInferenceService()
         val validationInputRetrieval = ValidationInputRetrieval()
-        var formattedInputData = validationInputRetrieval.getFormattedInput(20)
-//        formattedInputData = formattedInputData.shuffled().take(1)
-//        printInput(formattedInputData.toInferenceInput()[0].images)
+        val formattedInputData = validationInputRetrieval.getFormattedInput(20)
+
         inferenceService.getPrediction(formattedInputData.toInferenceInput())
                 .fold(
                         {

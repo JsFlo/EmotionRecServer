@@ -3,29 +3,17 @@ package com.emotionrec.gcpinference.models
 import com.emotionrec.domain.models.*
 
 // INPUT
-class GcpPredictionInput(val instances: Array<GcpPredictionInstance>) {
-    companion object {
-        fun create(inferenceInputs: List<InferenceInput>): GcpPredictionInput {
-            val predictionInstances = inferenceInputs.map { it.toGcpPredictionInstance() }
-            return GcpPredictionInput(predictionInstances.toTypedArray())
-        }
-    }
-}
+class GcpPredictionInput(val instances: Array<GcpPredictionInstance>)
+
+class GcpPredictionInstance(val images: List<List<Array<Float>>>)
 
 fun List<InferenceInput>.toGcpPredictionInput(): GcpPredictionInput {
-    return GcpPredictionInput.create(this)
-}
-
-class GcpPredictionInstance(val images: List<List<Array<Float>>>) {
-    companion object {
-        fun create(inferenceInput: InferenceInput): GcpPredictionInstance {
-            return GcpPredictionInstance(inferenceInput.images.map { it.map { arrayOf(it.r, it.g, it.b) } })
-        }
-    }
+    val predictionInstances = this.map { it.toGcpPredictionInstance() }
+    return GcpPredictionInput(predictionInstances.toTypedArray())
 }
 
 fun InferenceInput.toGcpPredictionInstance(): GcpPredictionInstance {
-    return GcpPredictionInstance.create(this)
+    return GcpPredictionInstance(this.images.map { it.map { arrayOf(it.r, it.g, it.b) } })
 }
 
 // RESULT

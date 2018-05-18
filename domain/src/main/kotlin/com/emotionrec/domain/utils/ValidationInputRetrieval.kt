@@ -7,41 +7,9 @@ import com.emotionrec.domain.models.toEmotion
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-fun printInput(image: List<List<RGB>>) {
-    image.forEach {
-        print("|")
-        it.forEach {
-            print(" [%.3f] ".format(it.r))
-        }
-        println("|")
-    }
-}
-
-fun printInput(image: Array<Array<Array<Float>>>) {
-    image.forEach {
-        print("|")
-        it.forEach {
-            print(" [%.3f] ".format(it[0]))
-        }
-        println("|")
-    }
-}
-
 data class RowData(val emotion: String, val pixels: String)
 
 class ValidationInputRetrieval(private val bufferedReader: BufferedReader = createResourceBufferedReader()) {
-
-    fun getAllRowInput(numberOfInputs: Int): Array<Float> {
-        return getPartialInputData(numberOfInputs).map {
-            pixelRowToArrayOfFloats2(it.pixels)
-        }[0]
-    }
-
-    private fun pixelRowToArrayOfFloats2(pixels: String): Array<Float> {
-        val pixelArray = pixels.split(" ")
-        check(pixelArray.size == 2304)
-        return pixelArray.map { it.toFloat()/255 }.toTypedArray()
-    }
 
     fun getFormattedInput(numberOfInputs: Int): List<Pair<InferenceInput, Emotion>> {
         return getPartialInputData(numberOfInputs).map {
