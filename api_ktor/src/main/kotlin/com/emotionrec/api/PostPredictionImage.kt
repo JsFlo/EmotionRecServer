@@ -17,6 +17,13 @@ import mu.KotlinLogging
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
+import java.io.IOException;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import javax.swing.Spring.height
+import javax.swing.Spring.height
+import java.awt.Graphics2D
+
 
 private val logger = KotlinLogging.logger { }
 
@@ -59,7 +66,47 @@ fun Routing.postPredictionImage() {
 }
 
 
-private fun getImagePrediction(file: File): Either<PredictionError, PredictionResponse> {
+private fun getImagePrediction(file: File, scaledWidth: Int = 48, scaledHeight: Int = 48): Either<PredictionError, PredictionResponse> {
+//    val img = ImageIO.read(file)
+
+    val inputImage = ImageIO.read(file)
+
+    // creates output image
+    val outputImage = BufferedImage(scaledWidth,
+            scaledHeight, inputImage.type)
+
+    // scales the input image to the output image
+    val g2d = outputImage.createGraphics()
+    g2d.drawImage(inputImage, 0, 0, scaledWidth, scaledHeight, null)
+    g2d.dispose()
+
+    // writes to output file
+    ImageIO.write(outputImage, "jpg", File ("ahhuuuu.jpg"))
+
+//    //get image width and height
+//    val width = img.width
+//    val height = img.height
+//
+//    //convert to grayscale
+//    for (y in 0 until height) {
+//        for (x in 0 until width) {
+//            var p = img.getRGB(x, y)
+//
+//            val a = p shr 24 and 0xff
+//            val r = p shr 16 and 0xff
+//            val g = p shr 8 and 0xff
+//            val b = p and 0xff
+//
+//            //calculate average
+//            val avg = (r + g + b) / 3
+//
+//            //replace RGB value with avg
+//            p = a shl 24 or (avg shl 16) or (avg shl 8) or avg
+//
+//            img.setRGB(x, y, p)
+//        }
+//    }
+
     return Either.left(PredictionError.TodoErr())
 }
 
