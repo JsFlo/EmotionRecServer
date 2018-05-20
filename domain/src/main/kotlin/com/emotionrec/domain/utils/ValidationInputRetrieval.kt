@@ -93,7 +93,7 @@ class ValidationInputRetrieval(private val bufferedReader: BufferedReader = crea
         fun createResourceBufferedReader(fileName: String = CSV_FILE_NAME): BufferedReader {
             //                    BufferedReader(FileReader(CSV_FILE_NAME))
 //        BufferedReader(InputStreamReader(ValidationInputRetrieval::class.java.getResourceAsStream(("/$CSV_FILE_NAME"))))
-            return BufferedReader(InputStreamReader(ValidationInputRetrieval::class.java.classLoader.getResourceAsStream((CSV_FILE_NAME))))
+            return BufferedReader(InputStreamReader(ValidationInputRetrieval::class.java.classLoader.getResourceAsStream((fileName))))
         }
     }
 }

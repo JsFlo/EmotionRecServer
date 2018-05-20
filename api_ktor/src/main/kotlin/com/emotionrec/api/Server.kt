@@ -26,5 +26,7 @@ fun Application.main() {
             call.respondText { "pong" }
         }
         postPrediction()
+        postPredictionImage()
     }
+
 }
