@@ -78,6 +78,6 @@ private fun getPrediction(inferenceService: InferenceService, inferenceInput: In
                     { Either.right(it) })
 }
 
-private fun List<PredictionGroup>.toPredictionResult(): PredictionResponse {
+fun List<PredictionGroup>.toPredictionResult(): PredictionResponse {
     return PredictionResponse(this[0].sortedPredictions, this[0].sortedPredictions[0])
 }
