@@ -99,11 +99,12 @@ private fun convertToGrayScale(file: File): InferenceInput {
 
             //calculate average
             val avg = (r + g + b) / 3
-            println("x: $x,y: $y ,value: $avg")
+
             val pixelValue = avg / 255.0f
             val rgb = RGB(pixelValue, pixelValue, pixelValue)// rgb with same values
             rowRgb.add(rgb)
-            //replace RGB value with avg
+
+            //replace ans save
 //            p = a shl 24 or (avg shl 16) or (avg shl 8) or avg
 //            img.setRGB(x, y, p)
         }
