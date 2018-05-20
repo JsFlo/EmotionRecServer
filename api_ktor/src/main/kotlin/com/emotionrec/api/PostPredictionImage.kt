@@ -6,6 +6,7 @@ import com.emotionrec.domain.models.InferenceInput
 import com.emotionrec.domain.models.RGB
 import com.emotionrec.domain.service.InferenceService
 import com.emotionrec.gcpinference.GcpInferenceService
+import com.emotionrec.tfinference.LocalInferenceService
 import io.ktor.application.call
 import io.ktor.content.PartData
 import io.ktor.content.forEachPart
@@ -27,7 +28,7 @@ import javax.imageio.ImageIO
 
 private val logger = KotlinLogging.logger { }
 
-fun Routing.postPredictionImage() {
+fun Routing.postPredictionImage(inferenceService: InferenceService) {
     post("/predictionImage") {
         logger.debug { "/predictionImage" }
         val multipart = call.receiveMultipart()
@@ -52,7 +53,7 @@ fun Routing.postPredictionImage() {
         if (inputStream != null) {
             val file = File("upload-${System.currentTimeMillis()}-$name")
             inputStream.use { its -> file.outputStream().buffered().use { its!!.copyToSuspend(it) } }
-            val result = getImagePrediction(file, GcpInferenceService())
+            val result = getImagePrediction(file, inferenceService)
             file.delete()
             when (result) {
                 is Either.Left -> call.respond(result.a)

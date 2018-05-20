@@ -1,6 +1,7 @@
 package com.emotionrec.api
 
 
+import com.emotionrec.tfinference.LocalInferenceService
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -14,6 +15,7 @@ import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger { }
 fun Application.main() {
+    val inferenceService = LocalInferenceService() // GcpInferenceService()
     install(ContentNegotiation) {
         gson {
             setPrettyPrinting()
@@ -25,8 +27,8 @@ fun Application.main() {
             logger.debug { "Received ping" }
             call.respondText { "pong" }
         }
-        postPrediction()
-        postPredictionImage()
+        postPrediction(inferenceService)
+        postPredictionImage(inferenceService)
     }
 
 }

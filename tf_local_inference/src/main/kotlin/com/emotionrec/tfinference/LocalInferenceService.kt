@@ -12,6 +12,7 @@ class LocalInferenceService : InferenceService {
 
     override fun getPrediction(inferenceInputs: List<InferenceInput>): Try<List<PredictionGroup>> {
         // TODO: load on every request ?
+        println("user dir: " + System.getProperty("user.dir"))
         val load: SavedModelBundle = SavedModelBundle.load("./1", "serve")
         return try {
             val inferenceResult = JavaUtils.runInference(load.session(), inferenceInputs.toLocalInferenceInput())

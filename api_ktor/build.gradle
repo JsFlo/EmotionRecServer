@@ -50,6 +50,7 @@ dependencies {
     // domain and inference service
     compile project(':domain')
     compile project(':gcp_inference')
+    compile project(':tf_local_inference')
 
     //test
     testCompile 'org.jetbrains.spek:spek-api:1.1.5'

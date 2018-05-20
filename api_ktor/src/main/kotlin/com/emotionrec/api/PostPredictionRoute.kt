@@ -24,11 +24,11 @@ sealed class PredictionError(val message: String) {
 
 data class PostPredictionData(val image_array: String, val delimeter: String?)
 
-fun Routing.postPrediction() {
+fun Routing.postPrediction(inferenceService: InferenceService) {
     post("/prediction") {
         logger.debug { "/prediction called" }
         val postData = call.receive<PostPredictionData>()
-        val result = predictionInput(postData.image_array, postData.delimeter ?: " ", GcpInferenceService())
+        val result = predictionInput(postData.image_array, postData.delimeter ?: " ", inferenceService)
         when (result) {
             is Either.Right -> call.respond(result.b)
             is Either.Left -> call.respond(result.a)
