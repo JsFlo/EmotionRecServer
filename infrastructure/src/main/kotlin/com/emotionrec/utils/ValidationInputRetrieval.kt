@@ -5,11 +5,10 @@ import com.emotionrec.domain.models.InferenceInput
 import com.emotionrec.domain.models.RGB
 import com.emotionrec.domain.models.toEmotion
 import java.io.BufferedReader
-import java.io.InputStreamReader
 
 data class RowData(val emotion: String, val pixels: String)
 
-class ValidationInputRetrieval(private val bufferedReader: BufferedReader = createResourceBufferedReader()) {
+class ValidationInputRetrieval(private val bufferedReader: BufferedReader) {
 
     fun getFormattedInput(numberOfInputs: Int): List<Pair<InferenceInput, Emotion>> {
         return getPartialInputData(numberOfInputs).map {
@@ -88,13 +87,6 @@ class ValidationInputRetrieval(private val bufferedReader: BufferedReader = crea
     companion object {
         private const val HEADER_EMOTION = "emotion"
         private const val HEADER_PIXELS = "pixels"
-        const val CSV_FILE_NAME = "fer2013.csv"
-
-        fun createResourceBufferedReader(fileName: String = CSV_FILE_NAME): BufferedReader {
-            //                    BufferedReader(FileReader(CSV_FILE_NAME))
-//        BufferedReader(InputStreamReader(ValidationInputRetrieval::class.java.getResourceAsStream(("/$CSV_FILE_NAME"))))
-            return BufferedReader(InputStreamReader(ValidationInputRetrieval::class.java.classLoader.getResourceAsStream((fileName))))
-        }
     }
 }
 

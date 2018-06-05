@@ -6,16 +6,32 @@ import com.emotionrec.domain.models.Emotion
 import com.emotionrec.domain.models.ErrorRate
 import com.emotionrec.domain.models.InferenceInput
 import com.emotionrec.domain.service.InferenceService
+import com.emotionrec.localtfinference.LocalInferenceService
 import com.emotionrec.utils.ValidationInputRetrieval
 import org.junit.Assert
 import org.junit.Test
+import org.tensorflow.SavedModelBundle
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class ValidationInferenceTest {
 
 
+    val CSV_FILE_NAME = "fer2013.csv"
+    fun createResourceBufferedReader(fileName: String = CSV_FILE_NAME): BufferedReader {
+        //                    BufferedReader(FileReader(CSV_FILE_NAME))
+//        BufferedReader(InputStreamReader(ValidationInputRetrieval::class.java.getResourceAsStream(("/$CSV_FILE_NAME"))))
+        return BufferedReader(InputStreamReader(ValidationInputRetrieval::class.java.classLoader.getResourceAsStream((fileName))))
+    }
+
+
     @Test
     fun localInferenceTest() {
-        getPrediction_20(getLocalInferenceService())
+//        getPrediction_20(
+//                LocalInferenceService({ SavedModelBundle.load("./fifSavedModel", "serve") }),
+//                ValidationInputRetrieval(createResourceBufferedReader()))
+        getPrediction_20(getLocalInferenceService(),
+                ValidationInputRetrieval(createResourceBufferedReader()))
     }
 //
 //    @Test
@@ -24,9 +40,7 @@ class ValidationInferenceTest {
 //    }
 
 
-    fun getPrediction_20(inferenceService: InferenceService) {
-
-        val validationInputRetrieval = ValidationInputRetrieval()
+    fun getPrediction_20(inferenceService: InferenceService, validationInputRetrieval: ValidationInputRetrieval) {
         val formattedInputData = validationInputRetrieval.getFormattedInput(20)
 
         inferenceService.getPrediction(formattedInputData.toInferenceInput())
