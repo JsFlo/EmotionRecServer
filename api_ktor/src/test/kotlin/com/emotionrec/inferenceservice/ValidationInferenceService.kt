@@ -6,11 +6,9 @@ import com.emotionrec.domain.models.Emotion
 import com.emotionrec.domain.models.ErrorRate
 import com.emotionrec.domain.models.InferenceInput
 import com.emotionrec.domain.service.InferenceService
-import com.emotionrec.localtfinference.LocalInferenceService
-import com.emotionrec.utils.ValidationInputRetrieval
+import com.emotionrec.inferenceservice.utils.ValidationInputRetrieval
 import org.junit.Assert
 import org.junit.Test
-import org.tensorflow.SavedModelBundle
 import java.io.BufferedReader
 import java.io.InputStreamReader
 

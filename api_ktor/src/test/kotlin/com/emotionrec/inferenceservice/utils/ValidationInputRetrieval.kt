@@ -1,4 +1,4 @@
-package com.emotionrec.utils
+package com.emotionrec.inferenceservice.utils
 
 import com.emotionrec.domain.models.Emotion
 import com.emotionrec.domain.models.InferenceInput
