@@ -1,34 +1,34 @@
-//package com.emotionrec.api
-//
-//import com.google.gson.GsonBuilder
-//import io.ktor.http.HttpMethod
-//import io.ktor.http.HttpStatusCode
-//import io.ktor.server.testing.TestApplicationEngine
-//import io.ktor.server.testing.createTestEnvironment
-//import io.ktor.server.testing.handleRequest
-//import junit.framework.Assert.assertEquals
-//import org.jetbrains.spek.api.Spek
-//import org.jetbrains.spek.api.dsl.describe
-//import org.jetbrains.spek.api.dsl.given
-//import org.jetbrains.spek.api.dsl.it
-//import org.junit.platform.runner.JUnitPlatform
-//import org.junit.runner.RunWith
-//
-//@RunWith(JUnitPlatform::class)
-//object HelloApplicationSpec : Spek({
-//    given("an application") {
-//        val engine = TestApplicationEngine(createTestEnvironment())
-//        engine.start(wait = false) // for now we can't eliminate it
-//        engine.application.main() // our main module function
-//
-//        with(engine) {
-//            describe("diagnostics") {
-//                it("ping should return pong") {
-//                    handleRequest(HttpMethod.Get, "/ping").let { call ->
-//                        assertEquals("pong", call.response.content)
-//                    }
-//                }
-//            }
+package com.emotionrec.api
+
+import com.google.gson.GsonBuilder
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.testing.TestApplicationEngine
+import io.ktor.server.testing.createTestEnvironment
+import io.ktor.server.testing.handleRequest
+import junit.framework.Assert.assertEquals
+import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.describe
+import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.it
+import org.junit.platform.runner.JUnitPlatform
+import org.junit.runner.RunWith
+
+@RunWith(JUnitPlatform::class)
+object HelloApplicationSpec : Spek({
+    given("an application") {
+        val engine = TestApplicationEngine(createTestEnvironment())
+        engine.start(wait = false) // for now we can't eliminate it
+        engine.application.main() // our main module function
+
+        with(engine) {
+            describe("diagnostics") {
+                it("ping should return pong") {
+                    handleRequest(HttpMethod.Get, "/ping").let { call ->
+                        assertEquals("pong", call.response.content)
+                    }
+                }
+            }
 //            describe("prediction") {
 //                it("Space separated 2304 Ints should return 200") {
 //                    handleRequest(HttpMethod.Post, "/prediction", {
@@ -39,25 +39,25 @@
 //                    }
 //                }
 //            }
-//        }
-//    }
-//})
-//
-////                    get("http://localhost:8080/ping").then().statusCode(200)
-//
+        }
+    }
+})
+
+//                    get("http://localhost:8080/ping").then().statusCode(200)
+
+//                    given()
+////                            .cookie(apiTestSessionID)
+////                            .contentType("application/json")
+////                            .body(jsonObj.toString())
+////                            .`when`()
+////                            .post("/post/Config")
 ////                    given()
-//////                            .cookie(apiTestSessionID)
-//////                            .contentType("application/json")
-//////                            .body(jsonObj.toString())
-//////                            .`when`()
-//////                            .post("/post/Config")
-//////                    given()
-//////                            .contentType("application/json")
-//////                            .body(PostPredictionData("", null))
-//////                            .when()
-//////                            .post("/prediction")
+////                            .contentType("application/json")
+////                            .body(PostPredictionData("", null))
+////                            .when()
+////                            .post("/prediction")
+////                            .then()
+////                            .statusCode(200)
+////                    post("/prediction")
 //////                            .then()
-//////                            .statusCode(200)
-//////                    post("/prediction")
-////////                            .then()
-////////                            .body
+//////                            .body

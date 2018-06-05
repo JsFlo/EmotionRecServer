@@ -7,15 +7,6 @@ import okhttp3.*
 import java.io.FileInputStream
 import java.util.*
 
-// TODO: Move this to app
-private const val GOOGLE_CRED_FILE = "happy_rec_cred.json"
-val googleCredentialFromFile: GoogleCredential by lazy {
-    GoogleCredential.fromStream(GoogleCredentialAuth::class.java.classLoader.getResourceAsStream(GOOGLE_CRED_FILE),
-            GoogleNetHttpTransport.newTrustedTransport()
-            , JacksonFactory.getDefaultInstance())
-            .createScoped(Collections.singleton("https://www.googleapis.com/auth/cloud-platform"))
-}
-
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class GoogleCredentialAuth(private val googleCredential: GoogleCredential) : Authenticator, Interceptor {
 
