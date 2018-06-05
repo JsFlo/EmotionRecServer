@@ -1,20 +1,21 @@
-//package com.emotionrec.tfinference.validationinput
+//package com.emotionrec.inference
 //
 //import com.emotionrec.domain.models.Emotion
 //import com.emotionrec.domain.models.ErrorRate
 //import com.emotionrec.domain.models.InferenceInput
-//import com.emotionrec.domain.utils.ValidationInputRetrieval
-//import com.emotionrec.tfinference.LocalInferenceService
+//import com.emotionrec.gcpinference.GcpInferenceService
+//import com.emotionrec.inference.utils.ValidationInputRetrieval
 //import org.junit.Assert
 //import org.junit.Test
-// TODO: Fix, can't find resource (need to copy over res/ to generated build path?)
-//class LocalValidationInputTest {
+//
+//class ValidationInferenceTest {
 //
 //    @Test
 //    fun getPrediction_20() {
-//        val inferenceService = LocalInferenceService()
+//        val inferenceService = GcpInferenceService()
+//
 //        val validationInputRetrieval = ValidationInputRetrieval()
-//        var formattedInputData = validationInputRetrieval.getFormattedInput(20)
+//        val formattedInputData = validationInputRetrieval.getFormattedInput(20)
 //
 //        inferenceService.getPrediction(formattedInputData.toInferenceInput())
 //                .fold(
@@ -35,6 +36,7 @@
 //                            Assert.assertTrue(it.size == formattedInputData.size)
 //                        })
 //    }
+//
 //
 //    fun List<Pair<InferenceInput, Emotion>>.toInferenceInput(): List<InferenceInput> {
 //        return this.map { it.first }

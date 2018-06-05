@@ -1,4 +1,4 @@
-package com.emotionrec.tfinference;
+package com.emotionrec.localtfinference;
 
 import org.jetbrains.annotations.NotNull;
 import org.tensorflow.Session;

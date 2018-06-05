@@ -1,3 +1,13 @@
+buildscript {
+    ext.kotlin_version = '1.2.31'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
 
 plugins {
     id 'java'
@@ -10,14 +20,25 @@ apply plugin: 'kotlin'
 
 sourceCompatibility = 1.8
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    // domain
+    compile project(':domain')
+
+    // gcp
     compile 'com.google.code.gson:gson:2.8.4'
     compile 'com.squareup.retrofit2:retrofit:2.4.0'
     compile 'com.squareup.retrofit2:converter-gson:2.4.0'
-    compile project(':domain')
     compile "com.google.api-client:google-api-client:1.23.0"
+
+    // local tf
+    compile "org.tensorflow:tensorflow:1.8.0"
 }
 
 compileKotlin {

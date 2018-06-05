@@ -1,4 +1,4 @@
-package com.emotionrec.tfinference.models
+package com.emotionrec.localtfinference.models
 
 import com.emotionrec.domain.models.InferenceInput
 

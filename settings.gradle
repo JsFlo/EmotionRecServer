@@ -1,6 +1,5 @@
 rootProject.name = 'emotion_rec_server'
 include 'domain'
-include 'gcp_inference'
+include 'infrastructure'
 include 'api_ktor'
-include 'tf_local_inference'
 
