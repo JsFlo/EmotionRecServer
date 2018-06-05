@@ -46,7 +46,7 @@ fun getInferenceService(): InferenceService {
 }
 
 fun getLocalInferenceService(): LocalInferenceService {
-    return LocalInferenceService({ SavedModelBundle.load("./fifSavedModel", "serve") })
+    return LocalInferenceService({ SavedModelBundle.load("./src/main/resources/1", "serve") })
 }
 
 fun getGcpInferenceService(): GcpInferenceService {
