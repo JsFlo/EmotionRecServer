@@ -7,12 +7,16 @@ import com.emotionrec.domain.service.InferenceService
 import com.emotionrec.gcpinference.models.GcpPredictionResult
 import com.emotionrec.gcpinference.models.toGcpPredictionInput
 import com.emotionrec.gcpinference.network.GcpPredictionApi
-import com.emotionrec.gcpinference.network.predictionServiceApi
+import com.emotionrec.gcpinference.network.GoogleCredentialAuth
+import com.emotionrec.gcpinference.network.getGcpPredictionServiceApi
 import retrofit2.Response
 
-class GcpInferenceService(private val predictionApi: GcpPredictionApi = predictionServiceApi) : InferenceService {
+class GcpInferenceService(googleCredentialAuth: GoogleCredentialAuth) : InferenceService {
+
+    private val gcpPredictionApi: GcpPredictionApi = getGcpPredictionServiceApi(googleCredentialAuth)
+
     override fun getPrediction(inferenceInputs: List<InferenceInput>): Try<List<PredictionGroup>> {
-        val response: Response<GcpPredictionResult>? = predictionApi.getPredictions(inferenceInputs.toGcpPredictionInput()).execute()
+        val response: Response<GcpPredictionResult>? = gcpPredictionApi.getPredictions(inferenceInputs.toGcpPredictionInput()).execute()
         return if (response?.isSuccessful == true) {
             val predictionGroups = response.body()?.toPredictionGroups()
             if (predictionGroups != null) {

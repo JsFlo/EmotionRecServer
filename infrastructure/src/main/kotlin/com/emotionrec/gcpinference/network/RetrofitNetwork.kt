@@ -21,21 +21,18 @@ interface GcpPredictionApi {
     fun getPredictions(@Body predictionsInput: GcpPredictionInput): Call<GcpPredictionResult>
 }
 
-private val retrofit by lazy {
-    val googleCredentialAuthenticatorAndInterceptor = GoogleCredentialAuth()
+fun getGcpPredictionServiceApi(googleCredentialAuthenticatorAndInterceptor: GoogleCredentialAuth): GcpPredictionApi {
     val okHttpClient = OkHttpClient.Builder()
             .authenticator(googleCredentialAuthenticatorAndInterceptor)
             .addNetworkInterceptor(googleCredentialAuthenticatorAndInterceptor)
             .readTimeout(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .build()
 
-    Retrofit.Builder()
+    val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-}
 
-val predictionServiceApi by lazy {
-    retrofit.create(GcpPredictionApi::class.java)
+    return retrofit.create(GcpPredictionApi::class.java)
 }
