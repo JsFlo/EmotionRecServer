@@ -34,7 +34,7 @@ fun Routing.postPredictionImage(inferenceService: InferenceService) {
         logger.debug { "/predictionImage" }
         val multipart = call.receiveMultipart()
         var name = ""
-        var inputStream: InputStream? = null
+        var imageInputStream: InputStream? = null
 
         multipart.forEachPart { part ->
             when (part) {
@@ -43,7 +43,7 @@ fun Routing.postPredictionImage(inferenceService: InferenceService) {
                     logger.debug { "Name: $name" }
                 }
                 is PartData.FileItem -> {
-                    inputStream = part.streamProvider()
+                    imageInputStream = part.streamProvider()
                 }
             }
 
@@ -51,11 +51,20 @@ fun Routing.postPredictionImage(inferenceService: InferenceService) {
         }
 
 
-        if (inputStream != null) {
+        if (imageInputStream != null) {
+            // create a file where we will put the image file being uploaded
             val file = File("upload-${System.currentTimeMillis()}-$name")
-            inputStream.use { its -> file.outputStream().buffered().use { its!!.copyToSuspend(it) } }
+
+            // copy image input stream into the file created
+            imageInputStream.use { its -> file.outputStream().buffered().use { its!!.copyToSuspend(it) } }
+
+            // predict
             val result = getImagePrediction(file, inferenceService)
+
+            // delete the file
             file.delete()
+
+            // respond
             when (result) {
                 is Either.Left -> call.respond(result.a)
                 is Either.Right -> call.respond(result.b)
@@ -68,6 +77,9 @@ fun Routing.postPredictionImage(inferenceService: InferenceService) {
     }
 }
 
+/**
+ * Converts the [file] image passed in into an [InferenceInput] and returns the [PredictionResponse] or a [PredictionError].
+ */
 private fun getImagePrediction(file: File, inferenceService: InferenceService): Either<PredictionError, PredictionResponse> {
     val resizedImageFile = resizeImageFile(file)
     val inferenceInput = convertToGrayScale(resizedImageFile)
@@ -80,6 +92,7 @@ private fun getImagePrediction(file: File, inferenceService: InferenceService): 
 
 private fun convertToGrayScale(file: File): InferenceInput {
     val img = ImageIO.read(file)
+
     //get image width and height
     val width = img.width
     val height = img.height
@@ -102,16 +115,15 @@ private fun convertToGrayScale(file: File): InferenceInput {
             val pixelValue = avg / 255.0f
             val rgb = RGB(pixelValue, pixelValue, pixelValue)// rgb with same values
             rowRgb.add(rgb)
-
-            //replace ans save
-//            p = a shl 24 or (avg shl 16) or (avg shl 8) or avg
-//            img.setRGB(x, y, p)
         }
         rowRgbList.add(rowRgb)
     }
     return InferenceInput(rowRgbList)
 }
 
+/**
+ * Resizes image file [file] to a specific width [scaledWidth] and height [scaledHeight].
+ */
 private fun resizeImageFile(file: File, scaledWidth: Int = 48, scaledHeight: Int = 48): File {
     val inputImage = ImageIO.read(file)
 
@@ -129,7 +141,10 @@ private fun resizeImageFile(file: File, scaledWidth: Int = 48, scaledHeight: Int
     return file
 }
 
-suspend fun InputStream.copyToSuspend(
+/**
+ * Copies the input stream (Receiver) to an [OutputStream]
+ */
+private suspend fun InputStream.copyToSuspend(
         out: OutputStream,
         bufferSize: Int = DEFAULT_BUFFER_SIZE,
         yieldSize: Int = 4 * 1024 * 1024,

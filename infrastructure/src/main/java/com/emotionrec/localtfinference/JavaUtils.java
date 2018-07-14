@@ -4,6 +4,11 @@ import org.jetbrains.annotations.NotNull;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 
+/**
+ * Needed a java class to pass in primitive floats to TensorFlow.
+ *
+ * TODO: Extract node names to const
+ */
 public class JavaUtils {
 
     @NotNull
