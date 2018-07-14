@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
 
 private const val API_NAME = "ml"
 private const val API_VERSION = "v1"
-private const val BASE_URL = "https://${API_NAME}.googleapis.com/${API_VERSION}/"
+private const val BASE_URL = "https://$API_NAME.googleapis.com/$API_VERSION/"
 
 private const val READ_TIMEOUT_SECONDS = 180L
 

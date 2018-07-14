@@ -19,7 +19,7 @@ fun InferenceInput.toGcpPredictionInstance(): GcpPredictionInstance {
 // RESULT
 class GcpPredictionResult(val predictions: Array<GcpPredictionScores>) {
     fun toPredictionGroups(): List<PredictionGroup> {
-        return predictions.map { it.scores.toPredictionGroup(true) }
+        return predictions.map { it.scores.toPredictionGroup(false) }
     }
 }
 

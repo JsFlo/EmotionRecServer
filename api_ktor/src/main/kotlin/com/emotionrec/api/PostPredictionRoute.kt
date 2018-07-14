@@ -23,6 +23,9 @@ sealed class PredictionError(val message: String) {
 
 data class PostPredictionData(val image_array: String, val delimeter: String?)
 
+/**
+ * Takes in 2304(48 x 48) array of ints and returns prediction response.
+ */
 fun Routing.postPrediction(inferenceService: InferenceService) {
     post("/prediction") {
         logger.debug { "/prediction called" }
@@ -51,7 +54,7 @@ private fun predictionInput(imageArray: String?, delimeter: String = " ", infere
 private fun getInferenceInput(imageArrayString: String, delimeter: String): Either<PredictionError, InferenceInput> {
     val pixelFloatArray = imageArrayString.split(delimeter)
             .map { it.toFloatOrNull() }
-            .filter { it != null } as List<Float>
+            .filterNotNull()
 
     return if (pixelFloatArray.size != 2304) {
         Either.left(PredictionError.InvalidInput("Input should be 2304 floats separated by:$delimeter"))

@@ -25,7 +25,9 @@ import javax.imageio.ImageIO
 
 
 private val logger = KotlinLogging.logger { }
-
+/**
+ * Accepts mutlipart file image upload
+ */
 fun Routing.postPredictionImage(inferenceService: InferenceService) {
     post("/predictionImage") {
         logger.debug { "/predictionImage" }

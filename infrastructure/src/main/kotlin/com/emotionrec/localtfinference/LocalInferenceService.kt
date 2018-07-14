@@ -13,10 +13,10 @@ class LocalInferenceService(val getSavedModelBundle: () -> SavedModelBundle) : I
     override fun getPrediction(inferenceInputs: List<InferenceInput>): Try<List<PredictionGroup>> {
         // TODO: load on every request ?
         val savedModelBundle: SavedModelBundle = getSavedModelBundle()
-//        val load: SavedModelBundle = SavedModelBundle.load("./1", "serve")
+
         return try {
             val inferenceResult = JavaUtils.runInference(savedModelBundle.session(), inferenceInputs.toLocalInferenceInput())
-            val result = inferenceResult.map { it.toTypedArray().toPredictionGroup(true) }
+            val result = inferenceResult.map { it.toTypedArray().toPredictionGroup(false) }
             Try.just(result)
         } catch (e: Exception) {
             Try.raise(e)

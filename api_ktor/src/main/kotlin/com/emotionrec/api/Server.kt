@@ -1,6 +1,7 @@
 package com.emotionrec.api
 
 
+import com.emotionrec.api.common.shouldUseGcp
 import com.emotionrec.domain.service.InferenceService
 import com.emotionrec.gcpinference.GcpInferenceService
 import com.emotionrec.gcpinference.network.GoogleCredentialAuth
@@ -23,7 +24,7 @@ import java.util.*
 
 private val logger = KotlinLogging.logger { }
 fun Application.main() {
-    val inferenceService = getInferenceService()
+    val inferenceService = getInferenceService(shouldUseGcp())
     install(ContentNegotiation) {
         gson {
             setPrettyPrinting()
@@ -41,15 +42,17 @@ fun Application.main() {
 
 }
 
-fun getInferenceService(): InferenceService {
-    return getLocalInferenceService()
+fun getInferenceService(shouldUseGcp: Boolean): InferenceService {
+    return if(shouldUseGcp) getGcpInferenceService() else getLocalInferenceService()
 }
 
 fun getLocalInferenceService(): LocalInferenceService {
-    return LocalInferenceService({ SavedModelBundle.load("./src/main/resources/1", "serve") })
+    logger.debug { "Using Local inference" }
+    return LocalInferenceService { SavedModelBundle.load("./src/main/resources/1", "serve") }
 }
 
 fun getGcpInferenceService(): GcpInferenceService {
+    logger.debug { "Using Gcp inference" }
     val GOOGLE_CRED_FILE = "happy_rec_cred.json"
 
     return GcpInferenceService(GoogleCredential.fromStream(GoogleCredentialAuth::class.java.classLoader.getResourceAsStream(GOOGLE_CRED_FILE),
@@ -57,5 +60,4 @@ fun getGcpInferenceService(): GcpInferenceService {
             , JacksonFactory.getDefaultInstance())
             .createScoped(Collections.singleton("https://www.googleapis.com/auth/cloud-platform")))
 }
-
 
