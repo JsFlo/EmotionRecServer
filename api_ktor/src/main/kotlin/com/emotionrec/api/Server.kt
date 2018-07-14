@@ -23,8 +23,17 @@ import org.tensorflow.SavedModelBundle
 import java.util.*
 
 private val logger = KotlinLogging.logger { }
+private const val GOOGLE_CRED_FILE = "happy_rec_cred.json"
+private const val GCP_SCOPE = "https://www.googleapis.com/auth/cloud-platform"
+
+private const val LOCAL_INF_MODEL = "./src/main/resources/1"
+private const val LOCAL_INF_TAG = "serve"
+
 fun Application.main() {
+
+    // choose inference service based on config property
     val inferenceService = getInferenceService(shouldUseGcp())
+
     install(ContentNegotiation) {
         gson {
             setPrettyPrinting()
@@ -36,7 +45,7 @@ fun Application.main() {
             logger.debug { "Received ping" }
             call.respondText { "pong" }
         }
-        postPrediction(inferenceService)
+        postPredictionImageArray(inferenceService)
         postPredictionImage(inferenceService)
     }
 
@@ -48,16 +57,16 @@ fun getInferenceService(shouldUseGcp: Boolean): InferenceService {
 
 fun getLocalInferenceService(): LocalInferenceService {
     logger.debug { "Using Local inference" }
-    return LocalInferenceService { SavedModelBundle.load("./src/main/resources/1", "serve") }
+    return LocalInferenceService { SavedModelBundle.load(LOCAL_INF_MODEL, LOCAL_INF_TAG) }
 }
 
 fun getGcpInferenceService(): GcpInferenceService {
     logger.debug { "Using Gcp inference" }
-    val GOOGLE_CRED_FILE = "happy_rec_cred.json"
+
 
     return GcpInferenceService(GoogleCredential.fromStream(GoogleCredentialAuth::class.java.classLoader.getResourceAsStream(GOOGLE_CRED_FILE),
             GoogleNetHttpTransport.newTrustedTransport()
             , JacksonFactory.getDefaultInstance())
-            .createScoped(Collections.singleton("https://www.googleapis.com/auth/cloud-platform")))
+            .createScoped(Collections.singleton(GCP_SCOPE)))
 }
 

@@ -2,6 +2,7 @@ package com.emotionrec.api
 
 import arrow.core.Either
 import com.emotionrec.api.responses.PredictionResponse
+import com.emotionrec.api.responses.toPredictionResult
 import com.emotionrec.domain.models.InferenceInput
 import com.emotionrec.domain.models.RGB
 import com.emotionrec.domain.service.InferenceService
@@ -75,8 +76,6 @@ private fun getImagePrediction(file: File, inferenceService: InferenceService): 
             { return Either.left(PredictionError.TodoErr()) },
             { return Either.right(it.toPredictionResult()) }
     )
-
-
 }
 
 private fun convertToGrayScale(file: File): InferenceInput {
