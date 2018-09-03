@@ -26,6 +26,7 @@ private val logger = KotlinLogging.logger { }
 private const val GOOGLE_CRED_FILE = "happy_rec_cred.json"
 private const val GCP_SCOPE = "https://www.googleapis.com/auth/cloud-platform"
 
+// TODO: This should be done through a config file too
 private const val LOCAL_INF_MODEL = "./src/main/resources/1"
 private const val LOCAL_INF_TAG = "serve"
 

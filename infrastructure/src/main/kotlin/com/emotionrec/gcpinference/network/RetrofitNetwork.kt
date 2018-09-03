@@ -17,6 +17,8 @@ private const val BASE_URL = "https://$API_NAME.googleapis.com/$API_VERSION/"
 private const val READ_TIMEOUT_SECONDS = 180L
 
 interface GcpPredictionApi {
+
+    // TODO: PUll out specific path pull it from config
     @POST("projects/ml-happy-rec/models/happy_rec_model/versions/v2:predict")
     fun getPredictions(@Body predictionsInput: GcpPredictionInput): Call<GcpPredictionResult>
 }
